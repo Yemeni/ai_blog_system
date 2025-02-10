@@ -11,15 +11,103 @@
 
 <body>
     <h1>{% if post %}Edit Post{% else %}New Post{% endif %}</h1>
-    <form method="post">
+
+    <form method="post" id="postForm">
         {% csrf_token %}
+
+        <label for="prompt">Prompt for AI:</label><br>
+        <input type="text" id="prompt" name="prompt" placeholder="Enter your prompt here"><br>
+        <button type="button" onclick="generatePost()">Generate Post</button><br>
+
+        <label for="ai_provider">Select AI Provider:</label><br>
+        <select id="ai_provider" name="ai_provider" required>
+            <option value="openai">OpenAI</option>
+            <option value="deepseek">DeepSeek</option>
+            <option value="other">Other AI Provider</option>
+        </select><br>
+
         <label for="title">Title:</label><br>
         <input type="text" id="title" name="title" value="{{ post.title|default:'' }}"><br>
+
         <label for="content">Content:</label><br>
         <textarea id="content" name="content">{{ post.content|default:'' }}</textarea><br>
+
         <button type="submit">Save</button>
     </form>
+
     <a href="{% url 'post_list' %}">Cancel</a>
+
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+
+        function generatePost() {
+            const prompt = document.getElementById('prompt').value;
+            const aiProvider = document.getElementById('ai_provider').value;
+
+            fetch('{% url "post_create" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({
+                    prompt: prompt,
+                    ai_provider: aiProvider,
+                    generate_only: true  // ✅ This flag tells Django to generate content only
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.title && data.content) {
+                        document.getElementById('title').value = data.title;
+                        document.getElementById('content').value = data.content;
+                    } else {
+                        alert("AI response missing title or content. Please try again.");
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        document.getElementById('postForm').addEventListener('submit', function (event) {
+            event.preventDefault();  // Prevent default form submission
+
+            const formData = new FormData(this);  // Collect all form fields, including CSRF token
+
+            fetch('{% url "post_create" %}', {
+                method: 'POST',
+                body: formData  // Send form-encoded data
+            })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;  // Redirect to the post list if successful
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then(data => {
+                    if (data && data.error) {
+                        alert("Error: " + data.error);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+    </script>
 </body>
 
 </html>
