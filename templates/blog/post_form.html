@@ -68,7 +68,7 @@
                 body: JSON.stringify({
                     prompt: prompt,
                     ai_provider: aiProvider,
-                    generate_only: true  // ✅ This flag tells Django to generate content only
+                    generate_only: true
                 })
             })
                 .then(response => response.json())
@@ -82,6 +82,7 @@
                 })
                 .catch(error => console.error('Error:', error));
         }
+
 
         document.getElementById('postForm').addEventListener('submit', function (event) {
             event.preventDefault();  // Prevent default form submission

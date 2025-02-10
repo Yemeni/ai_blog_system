@@ -9,7 +9,6 @@ import json
 def post_create(request):
     if request.method == "POST":
         try:
-            # Handle AI Generation (JSON request)
             if request.headers.get('Content-Type') == 'application/json':
                 data = json.loads(request.body)
                 prompt = data.get('prompt')
@@ -18,10 +17,10 @@ def post_create(request):
 
                 if generate_only:
                     ai_generator = AIProvider()
-                    content = ai_generator.generate_content(prompt, ai_provider)
-                    return JsonResponse({'title': prompt, 'content': content})
+                    generated_data = ai_generator.generate_content(prompt, ai_provider)
+                    return JsonResponse(generated_data)
 
-            # Handle Traditional Form Submission
+            # Handle traditional form submission
             title = request.POST.get('title')
             content = request.POST.get('content')
 
@@ -31,7 +30,7 @@ def post_create(request):
             post = Post(title=title, content=content, author=request.user)
             post.save()
 
-            return redirect('post_list')  # ✅ Redirect after successful save
+            return redirect('post_list')
 
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
