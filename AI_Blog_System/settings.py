@@ -31,14 +31,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "rosetta", # the rosetta app
-    "blog",
+
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rosetta", # the rosetta app
+    "blog",
+    "lang_manager",
 ]
 
 MIDDLEWARE = [
