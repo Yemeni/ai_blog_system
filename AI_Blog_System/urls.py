@@ -21,4 +21,5 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('blog.urls')),  # Include blog app URLs
+    path('rosetta/', include('rosetta.urls')),  # Include rosetta app URLs
 ]
