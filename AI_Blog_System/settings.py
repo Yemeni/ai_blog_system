@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rosetta", # the rosetta app
     "blog",
+    "parler",
     "lang_manager",
 ]
 
@@ -128,6 +129,19 @@ LANGUAGES = [
     ('ar', _('Arabic'))
 
 ]
+
+# TODO: make this dynamic based on the langauge app, maybe .json? 
+PARLER_LANGUAGES = {
+    None: (
+        {'code': 'en'},
+        {'code': 'ar'},
+    ),
+    'default': {
+        'fallback': 'en',
+        'hide_untranslated': False,
+    }
+}
+
 
 LOCALE_PATHS = [
     # BASE_DIR / 'locale',
