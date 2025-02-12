@@ -126,7 +126,8 @@ USE_TZ = True
 # TODO: make this dynamic based on the langauge app that we will make
 LANGUAGES = [
     ('en', _('English')),
-    ('ar', _('Arabic'))
+    ('ar', _('Arabic')),
+    ('fr', _('French')),
 
 ]
 
@@ -135,6 +136,7 @@ PARLER_LANGUAGES = {
     None: (
         {'code': 'en'},
         {'code': 'ar'},
+        {'code': 'fr'},
     ),
     'default': {
         'fallback': 'en',
