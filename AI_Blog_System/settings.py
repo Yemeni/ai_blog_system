@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os.path
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -113,19 +115,20 @@ LANGUAGE_CODE = "en"
 TIME_ZONE = "UTC"
 
 USE_I18N = True
-USE_L10N = True
+USE_L10N = True # the thingy for translators, check it later
 USE_TZ = True
 
 
 # TODO: make this dynamic based on the langauge app that we will make
 LANGUAGES = [
-    ('en', 'English'),
-    ('ar', 'Arabic')
+    ('en', _('English')),
+    ('ar', _('Arabic'))
 
 ]
 
 LOCALE_PATHS = [
-    BASE_DIR / 'locale',
+    # BASE_DIR / 'locale',
+    os.path.join(BASE_DIR , 'locale'),
 ]
 
 # Static files (CSS, JavaScript, Images)
