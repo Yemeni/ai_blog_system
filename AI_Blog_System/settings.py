@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os.path
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
+from .utils import get_languages, get_parler_languages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -123,27 +124,30 @@ USE_L10N = True # the thingy for translators, check it later
 USE_TZ = True
 
 
-# TODO: make this dynamic based on the langauge app that we will make
-LANGUAGES = [
-    ('en', _('English')),
-    ('ar', _('Arabic')),
-    ('fr', _('French')),
+# # TODO: make this dynamic based on the langauge app that we will make
+# LANGUAGES = [
+#     ('en', _('English')),
+#     ('ar', _('Arabic')),
+#     ('fr', _('French')),
 
-]
+# ]
 
-# TODO: make this dynamic based on the langauge app, maybe .json? 
-PARLER_LANGUAGES = {
-    None: (
-        {'code': 'en'},
-        {'code': 'ar'},
-        {'code': 'fr'},
-    ),
-    'default': {
-        'fallback': 'en',
-        'hide_untranslated': False,
-    }
-}
+# # TODO: make this dynamic based on the langauge app, maybe .json? 
+# PARLER_LANGUAGES = {
+#     None: (
+#         {'code': 'en'},
+#         {'code': 'ar'},
+#         {'code': 'fr'},
+#     ),
+#     'default': {
+#         'fallback': 'en',
+#         'hide_untranslated': False,
+#     }
+# }
 
+
+LANGUAGES = get_languages()
+PARLER_LANGUAGES = get_parler_languages()
 
 LOCALE_PATHS = [
     # BASE_DIR / 'locale',

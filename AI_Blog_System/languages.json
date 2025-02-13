@@ -1,0 +1,26 @@
+{
+    "languages": [
+        [
+            "en",
+            "English"
+        ],
+        [
+            "ar",
+            "Arabic"
+        ]
+    ],
+    "parler_languages": {
+        "global": [
+            {
+                "code": "en"
+            },
+            {
+                "code": "ar"
+            }
+        ],
+        "default": {
+            "fallback": "en",
+            "hide_untranslated": false
+        }
+    }
+}
