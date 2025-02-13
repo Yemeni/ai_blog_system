@@ -1,27 +1,44 @@
-from django.shortcuts import redirect
-from django.utils.translation import get_language
-from django.contrib import messages
-from django.conf import settings
-from rest_framework import viewsets
-from .models import Language
-from .serializers import LanguageSerializer
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from .utils import load_languages, save_languages, add_language, remove_language
 
-class LanguageViewSet(viewsets.ModelViewSet): 
-    queryset = Language.objects.all()
-    serializer_class = LanguageSerializer
+@csrf_exempt
+def list_languages(request):
+    """Returns the list of available languages."""
+    return JsonResponse(load_languages())
 
-def add_language_to_rosetta_parler(request, lang_id):
-    """Handles dynamically adding a language to Django settings & Rosetta"""
-    language = Language.objects.get(id=lang_id)
-    lang_code = language.code
+@csrf_exempt
+def add_language_view(request):
+    """Adds a new language to languages.json."""
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            code = data.get("code")
+            name = data.get("name")
 
-    # Add the language dynamically to LANGUAGES (Temporary, does not persist)
-    if lang_code not in [lang[0] for lang in settings.LANGUAGES]:
-        settings.LANGUAGES += ((lang_code, language.name),)
+            if not code or not name:
+                return JsonResponse({"error": "Code and Name are required"}, status=400)
 
-    # Get current language to redirect correctly
-    current_lang = get_language()
-    admin_url = f"/{current_lang}/admin/lang_manager/language/"
+            if add_language(code, name):
+                return JsonResponse({"message": f"Language {name} ({code}) added successfully"})
+            else:
+                return JsonResponse({"error": "Language already exists"}, status=400)
 
-    messages.success(request, f"Language {language.name} ({lang_code}) added successfully!")
-    return redirect(admin_url)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)
+
+@csrf_exempt
+def remove_language_view(request):
+    """Removes a language from languages.json."""
+    if request.method == "POST":
+        data = json.loads(request.body)
+        code = data.get("code")
+
+        if not code:
+            return JsonResponse({"error": "Code is required"}, status=400)
+
+        remove_language(code)
+        return JsonResponse({"message": f"Language {code} removed successfully"})

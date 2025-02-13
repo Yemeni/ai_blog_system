@@ -1,8 +1,10 @@
 from django.urls import path
-from .views import add_language_to_rosetta_parler
+from .views import add_language_view, remove_language_view, list_languages  # ✅ Import new JSON-based views
 
 app_name = "lang_manager"
 
 urlpatterns = [
-    path("add_language_to_rosetta_parler/<int:lang_id>/", add_language_to_rosetta_parler, name="add_language_to_rosetta_parler"),
+    path("list/", list_languages, name="list_languages"),
+    path("add/", add_language_view, name="add_language"),
+    path("remove/", remove_language_view, name="remove_language"),
 ]

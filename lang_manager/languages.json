@@ -7,6 +7,10 @@
         [
             "ar",
             "Arabic"
+        ],
+        [
+            "de",
+            "German"
         ]
     ],
     "parler_languages": {
@@ -16,6 +20,9 @@
             },
             {
                 "code": "ar"
+            },
+            {
+                "code": "de"
             }
         ],
         "default": {

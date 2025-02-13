@@ -1,10 +1,8 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import LanguageViewSet
-
-router = DefaultRouter()
-router.register(r'languages', LanguageViewSet, basename='language')
+from django.urls import path
+from .views import list_languages, add_language_view, remove_language_view
 
 urlpatterns = [
-    path("", include(router.urls)),  # API routes
+    path("list/", list_languages, name="list_languages"),
+    path("add/", add_language_view, name="add_language"),
+    path("remove/", remove_language_view, name="remove_language"),
 ]

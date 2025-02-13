@@ -1,28 +1,36 @@
 import os
 import json
-from django.utils.translation import gettext_lazy as _
 
-def load_json_settings(filename):
-    """Loads a JSON file and returns the parsed data."""
-    file_path = os.path.join(os.path.dirname(__file__), filename)
-    
+# Manually define BASE_DIR to avoid circular imports
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Set the correct path to `languages.json`
+LANGUAGE_FILE = os.path.join(BASE_DIR, "lang_manager", "languages.json")
+
+def load_json_settings():
+    """Loads the JSON file and returns parsed data."""
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(LANGUAGE_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
     except FileNotFoundError:
-        raise RuntimeError(f"Configuration file '{filename}' not found.")
+        raise RuntimeError(f"Configuration file '{LANGUAGE_FILE}' not found.")
     except json.JSONDecodeError:
-        raise RuntimeError(f"Error parsing '{filename}'. Ensure it's a valid JSON file.")
+        raise RuntimeError(f"Error parsing '{LANGUAGE_FILE}'. Ensure it's a valid JSON file.")
+
+def save_languages(data):
+    """Saves updated language data back to languages.json."""
+    with open(LANGUAGE_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4)
 
 def get_languages():
-    """Returns LANGUAGES list from the JSON configuration."""
-    language_data = load_json_settings('languages.json')
-    return [(lang[0], _(lang[1])) for lang in language_data.get('languages', [])]
+    """Returns LANGUAGES list from languages.json."""
+    language_data = load_json_settings()
+    return [(lang[0], lang[1]) for lang in language_data.get("languages", [])]
 
 def get_parler_languages():
-    """Returns PARLER_LANGUAGES dictionary from the JSON configuration."""
-    language_data = load_json_settings('languages.json')
+    """Returns PARLER_LANGUAGES dictionary from languages.json."""
+    language_data = load_json_settings()
     return {
-        None: tuple(language_data.get('parler_languages', {}).get('global', [])),
-        'default': language_data.get('parler_languages', {}).get('default', {})
+        None: tuple(language_data.get("parler_languages", {}).get("global", [])),
+        "default": language_data.get("parler_languages", {}).get("default", {})
     }
