@@ -6,5 +6,5 @@ router = DefaultRouter()
 router.register(r'languages', LanguageViewSet, basename='language')
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),  # API routes
 ]
