@@ -9,6 +9,10 @@
             "Arabic"
         ],
         [
+            "fr",
+            "French"
+        ],
+        [
             "de",
             "German"
         ]
@@ -20,6 +24,9 @@
             },
             {
                 "code": "ar"
+            },
+            {
+                "code": "fr"
             },
             {
                 "code": "de"

@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .utils import load_languages, save_languages, add_language, remove_language
+from .utils import load_languages, save_languages, add_language, remove_language, generate_all_translations
 
 @csrf_exempt
 def list_languages(request):
@@ -42,3 +42,16 @@ def remove_language_view(request):
 
         remove_language(code)
         return JsonResponse({"message": f"Language {code} removed successfully"})
+
+@csrf_exempt
+def generate_translations_view(request):
+    """API endpoint to manually trigger .po and .mo file generation for all languages."""
+    if request.method == "POST":
+        result = generate_all_translations()
+        return JsonResponse({
+            "message": "Translation files generated",
+            "success": result["success"],
+            "failed": result["failed"]
+        })
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)
