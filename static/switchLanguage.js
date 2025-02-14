@@ -3,12 +3,17 @@ function switchLanguage(newLang) {
     let urlParts = currentUrl.split("/").filter(part => part);
     let currentLang = urlParts[0];
 
-    let knownLanguages = ["en", "ar", "de", "fr"];
+    // ✅ Ensure `knownLanguages` exists and is valid
+    if (typeof knownLanguages === "undefined" || !Array.isArray(knownLanguages)) {
+        console.error("Error: knownLanguages is not defined correctly.");
+        return;
+    }
 
+    // ✅ Fix issue where an incorrect URL like /fr/vi appears
     if (knownLanguages.includes(currentLang)) {
         urlParts[0] = newLang;
     } else {
-        urlParts.unshift(newLang);
+        urlParts = [newLang, ...urlParts.slice(1)];  // Prevent incorrect duplicate languages
     }
 
     window.location.pathname = "/" + urlParts.join("/");
