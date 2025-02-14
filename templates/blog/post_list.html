@@ -6,9 +6,7 @@
 {% block content %}
 <h1>{% trans "Blog Posts" %}</h1>
 
-<div class="post-actions">
-    <a href="{% url 'post_create' %}" class="btn">{% trans "Create New Post" %}</a>
-</div>
+
 
 <div class="post-list-container">
     <ul class="post-list">
@@ -16,5 +14,11 @@
         {% include "blog/_post.html" with post=post %}
         {% endfor %}
     </ul>
+</div>
+
+
+
+<div class="post-actions">
+    <a href="{% url 'post_create' %}" class="btn">{% trans "Create New Post" %}</a>
 </div>
 {% endblock %}
