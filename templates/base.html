@@ -1,0 +1,25 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_CODE in 'ar,fa,he,ur,ps,sd' %}rtl{% else %}ltr{% endif %}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Blog{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+</head>
+
+<body>
+    <nav>
+        <a href="{% url 'post_list' %}">{% trans "Home" %}</a>
+        <a href="{% url 'post_create' %}">{% trans "New Post" %}</a>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+
+</html>

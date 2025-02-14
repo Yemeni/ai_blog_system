@@ -1,28 +1,14 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% load i18n %}
 
-<head>
-    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Posts</title>
-</head>
+{% block title %}{% trans "Blog Posts" %}{% endblock %}
 
-<body>
-    <h1>Blog Posts</h1>
-    <a href="{% url 'post_create' %}">Create New Post</a>
-    <ul>
-        {% for post in posts %}
-        <li>
-            <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a>
-            <form action="{% url 'post_delete' post.pk %}" method="post" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit">Delete</button>
-            </form>
-        </li>
-        {% endfor %}
-    </ul>
-</body>
-
-</html>
+{% block content %}
+<h1>{% trans "Blog Posts" %}</h1>
+<a href="{% url 'post_create' %}" class="btn">{% trans "Create New Post" %}</a>
+<ul class="post-list">
+    {% for post in posts %}
+    {% include "blog/_post.html" with post=post %}
+    {% endfor %}
+</ul>
+{% endblock %}

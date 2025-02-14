@@ -1,0 +1,9 @@
+{% load i18n %}
+
+<li class="post-item">
+    <a href="{% url 'post_detail' post.pk %}" class="post-title">{{ post.title }}</a>
+    <form action="{% url 'post_delete' post.pk %}" method="post" class="post-delete-form">
+        {% csrf_token %}
+        <button type="submit" class="btn-delete">{% trans "Delete" %}</button>
+    </form>
+</li>
