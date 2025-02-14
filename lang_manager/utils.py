@@ -139,19 +139,74 @@ def list_rosetta_translations():
 
 
 def list_parler_translations():
-    """Lists all translations stored by Parler."""
+    """Lists all translations stored by Parler with object IDs."""
     translations = []
     
-    for model in TranslatableModel.__subclasses__():  
-        for obj in model.objects.all(): 
-            for lang_code in obj.get_available_languages():  
-                obj.set_current_language(lang_code)  
+    for model in TranslatableModel.__subclasses__():  # Get all translatable models
+        for obj in model.objects.all():  # Iterate over all objects
+            for lang_code in obj.get_available_languages():  # Get available translations
+                obj.set_current_language(lang_code)  # ✅ Switch to correct language
+                
+                translated_fields = {
+                    field: getattr(obj, field) for field in model._parler_meta.get_translated_fields()
+                }
+
                 translations.append({
                     "model": model.__name__,
+                    "object_id": obj.id,  # ✅ Include object ID
                     "language_code": lang_code,
-                    "translated_fields": {
-                        field: getattr(obj, field) for field in model._parler_meta.get_translated_fields()
-                    }
+                    "translated_fields": translated_fields if translated_fields else "No translations available"
                 })
 
     return translations
+
+
+
+def update_rosetta_translation(lang_code, original_text, new_translation):
+    """Updates a translation in Rosetta's .po file."""
+    locale_paths = settings.LOCALE_PATHS
+
+    for path in locale_paths:
+        po_file_path = os.path.join(path, lang_code, "LC_MESSAGES", "django.po")
+        if os.path.exists(po_file_path):
+            po = polib.pofile(po_file_path)
+
+            # Find and update the translation
+            for entry in po:
+                if entry.msgid == original_text:
+                    entry.msgstr = new_translation
+                    po.save()  # Save the changes to the file
+
+                    # Compile .mo file to apply changes
+                    mo_file_path = po_file_path.replace(".po", ".mo")
+                    subprocess.run(["msgfmt", "-o", mo_file_path, po_file_path], check=True)
+
+                    return True  # Successfully updated
+
+    return False  # Translation not found
+
+
+
+def update_parler_translation(model_name, object_id, lang_code, field, new_translation):
+    """Updates or creates a translation in Parler's database."""
+    for model in TranslatableModel.__subclasses__():
+        if model.__name__ == model_name:
+            try:
+                obj = model.objects.get(id=object_id)  # ✅ Get specific object by ID
+                available_languages = obj.get_available_languages()
+
+                # If translation does not exist, create it
+                if lang_code not in available_languages:
+                    obj.create_translation(lang_code)  # ✅ Create a new translation entry
+
+                obj.set_current_language(lang_code)  # ✅ Switch to the requested language
+
+                if hasattr(obj, field):  # ✅ Ensure field exists
+                    setattr(obj, field, new_translation)  # ✅ Update or create translation
+                    obj.save()
+                    return True  # ✅ Successfully updated or created
+
+            except model.DoesNotExist:
+                return False  # ❌ Object not found
+
+    return False  # ❌ Translation or field not found

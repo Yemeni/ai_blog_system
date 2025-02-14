@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .utils import load_languages, save_languages, add_language, remove_language, generate_all_translations, generate_translation_files
-from .utils import list_rosetta_translations, list_parler_translations # make this later in a separate thingy
+from .utils import list_rosetta_translations, list_parler_translations, update_parler_translation, update_rosetta_translation # make this later in a separate thingy
 
 @csrf_exempt
 def list_languages(request):
@@ -84,5 +84,40 @@ def list_translations_view(request):
             "rosetta_translations": rosetta_translations,
             "parler_translations": parler_translations
         }, safe=False)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)
+
+
+
+@csrf_exempt
+def update_translation_view(request):
+    """API endpoint to modify translations for a specific object in Parler."""
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            translation_type = data.get("type")  # Must be "parler"
+
+            if translation_type == "parler":
+                model_name = data.get("model_name")
+                object_id = data.get("object_id")  # ✅ Require object ID
+                lang_code = data.get("language_code")
+                field = data.get("field")  # Must be "title" or "content"
+                new_translation = data.get("new_translation")
+
+                if not all([model_name, object_id, lang_code, field, new_translation]):
+                    return JsonResponse({"error": "Missing required parameters"}, status=400)
+
+                success = update_parler_translation(model_name, object_id, lang_code, field, new_translation)
+
+            else:
+                return JsonResponse({"error": "Invalid translation type"}, status=400)
+
+            if success:
+                return JsonResponse({"message": "Translation updated successfully"})
+            else:
+                return JsonResponse({"error": "Translation or object not found"}, status=404)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
 
     return JsonResponse({"error": "Invalid request method"}, status=405)
