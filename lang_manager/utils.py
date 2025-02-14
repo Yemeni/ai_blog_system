@@ -110,32 +110,47 @@ from rosetta.conf import settings as rosetta_settings
 
 import polib  # Used to read .po files
 
+
 def list_rosetta_translations():
-    """Lists all translation fields from Rosetta instead of just file paths."""
+    """Lists all translation fields from Rosetta, including untranslated keys."""
     locale_paths = settings.LOCALE_PATHS
     available_languages = settings.LANGUAGES
 
     translations = []
+
     for lang_code, lang_name in available_languages:
         translation_entries = []
+        missing_entries = []
+
         for path in locale_paths:
             po_file_path = os.path.join(path, lang_code, "LC_MESSAGES", "django.po")
+
             if os.path.exists(po_file_path):
                 po = polib.pofile(po_file_path)
-                for entry in po.translated_entries():
-                    translation_entries.append({
-                        "original": entry.msgid,
-                        "translated": entry.msgstr
-                    })
+
+                for entry in po:
+                    if entry.msgstr.strip():  # ✅ If translated
+                        translation_entries.append({
+                            "original": entry.msgid,
+                            "translated": entry.msgstr
+                        })
+                    else:  # ❌ If missing translation
+                        missing_entries.append({
+                            "original": entry.msgid,
+                            "translated": None  # No translation available
+                        })
+
                 break  # Stop after finding the first valid file
 
         translations.append({
             "language_code": lang_code,
             "language_name": lang_name,
-            "translations": translation_entries if translation_entries else "No translations available"
+            "translations": translation_entries if translation_entries else "No translations available",
+            "missing_translations": missing_entries if missing_entries else "All translations available"
         })
 
     return translations
+
 
 
 def list_parler_translations():
