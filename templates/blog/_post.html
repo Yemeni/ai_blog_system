@@ -1,9 +1,9 @@
 {% load i18n %}
 
-<li class="post-item">
+<li class="post-item d-flex justify-content-between align-items-center">
     <a href="{% url 'post_detail' post.pk %}" class="post-title">{{ post.title }}</a>
     <form action="{% url 'post_delete' post.pk %}" method="post" class="post-delete-form">
         {% csrf_token %}
-        <button type="submit" class="btn-delete">{% trans "Delete" %}</button>
+        <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
     </form>
 </li>
