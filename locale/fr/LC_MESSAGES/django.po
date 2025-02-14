@@ -17,9 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
 #: .\blog\models.py:8
 msgid "title"
-msgstr ""
+msgstr "le tittle"
 
 #: .\blog\models.py:9
 msgid "content"
