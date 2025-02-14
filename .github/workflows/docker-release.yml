@@ -1,0 +1,49 @@
+name: Docker Build & Release
+
+on:
+  workflow_run:
+    workflows: ["Django CI/CD Pipeline"]
+    types:
+      - completed
+
+jobs:
+  build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 🏗️ Build Docker Image
+        run: |
+          docker build -t my-django-app .
+      
+      - name: 🛠️ Save Docker Image as a Tar Archive
+        run: |
+          docker save -o my-django-app.tar my-django-app
+
+      - name: 📦 Upload Docker Image as an Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: django-docker-image
+          path: my-django-app.tar
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Download Docker Image
+        uses: actions/download-artifact@v3
+        with:
+          name: django-docker-image
+          path: .
+
+      - name: 🏗️ Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: "Django Docker Image Release"
+          body: "Auto-generated release for build #${{ github.run_number }}."
+          files: my-django-app.tar
