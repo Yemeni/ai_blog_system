@@ -100,3 +100,49 @@ def generate_all_translations():
         "success": success_list,
         "failed": error_list
     }
+
+# TODO: extract the following stuff to a separate file
+
+from django.conf import settings
+from parler.models import TranslatableModel, TranslatedFields
+from django.utils.translation import gettext as _
+from rosetta.conf import settings as rosetta_settings
+
+def list_rosetta_translations():
+    """Lists all Rosetta translations available in the system."""
+    locale_paths = settings.LOCALE_PATHS
+    available_languages = settings.LANGUAGES
+
+    translations = []
+    for lang_code, lang_name in available_languages:
+        lang_path = None
+        for path in locale_paths:
+            lang_path = f"{path}/{lang_code}/LC_MESSAGES/django.po"
+            if os.path.exists(lang_path):
+                break  # Found a valid translation file
+
+        translations.append({
+            "language_code": lang_code,
+            "language_name": lang_name,
+            "translation_file": lang_path if lang_path and os.path.exists(lang_path) else "Not found"
+        })
+
+    return translations
+
+def list_parler_translations():
+    """Lists all translations stored by Parler."""
+    translations = []
+    
+    for model in TranslatableModel.__subclasses__():  
+        for obj in model.objects.all(): 
+            for lang_code in obj.get_available_languages():  
+                obj.set_current_language(lang_code)  
+                translations.append({
+                    "model": model.__name__,
+                    "language_code": lang_code,
+                    "translated_fields": {
+                        field: getattr(obj, field) for field in model._parler_meta.get_translated_fields()
+                    }
+                })
+
+    return translations

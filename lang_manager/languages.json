@@ -9,12 +9,12 @@
             "Arabic"
         ],
         [
-            "fr",
-            "French"
-        ],
-        [
             "de",
             "German"
+        ],
+        [
+            "fr",
+            "French"
         ]
     ],
     "parler_languages": {
@@ -26,10 +26,10 @@
                 "code": "ar"
             },
             {
-                "code": "fr"
+                "code": "de"
             },
             {
-                "code": "de"
+                "code": "fr"
             }
         ],
         "default": {
