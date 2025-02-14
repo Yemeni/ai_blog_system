@@ -16,5 +16,6 @@ urlpatterns += [
 urlpatterns += i18n_patterns(
     path("admin/", admin.site.urls),
     path("lang_manager/", include("lang_manager.admin_urls")),  # Ensure admin actions respect i18n
+    path("lang_manager/", include("lang_manager.urls")),  # Ensure admin actions respect i18n
     path("", include("blog.urls")),
 )

@@ -12,10 +12,7 @@
 </head>
 
 <body>
-    <nav>
-        <a href="{% url 'post_list' %}">{% trans "Home" %}</a>
-        <a href="{% url 'post_create' %}">{% trans "New Post" %}</a>
-    </nav>
+    {% include "blog/navbar.html" %}
 
     <main>
         {% block content %}{% endblock %}

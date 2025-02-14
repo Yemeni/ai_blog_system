@@ -1,0 +1,49 @@
+{% load i18n %}
+{% load static %}
+{% get_current_language as CURRENT_LANGUAGE %}
+{% get_available_languages as AVAILABLE_LANGUAGES %}
+{% get_language_info_list for AVAILABLE_LANGUAGES as languages %}
+
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="{% url 'post_list' %}">{% trans "Home" %}</a>
+        <a href="{% url 'post_create' %}">{% trans "New Post" %}</a>
+    </div>
+
+    {# ✅ Simple Language Switcher #}
+    <div class="language-switcher">
+        <span>{% trans "Language" %}: </span>
+        <ul class="lang-list">
+            {% for language in languages %}
+            <li>
+                <a href="#" onclick="switchLanguage('{{ language.code }}'); return false;"
+                    class="{% if language.code == CURRENT_LANGUAGE %}active{% endif %}">
+                    {{ language.name_local }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</nav>
+
+
+
+<script>
+    // ugly javascript, make it in a separate class or change this to a better solution
+    function switchLanguage(newLang) {
+        let currentUrl = window.location.pathname; // Get current URL path
+        let urlParts = currentUrl.split("/").filter(part => part); // Remove empty elements
+        let currentLang = urlParts[0]; // First part is language code
+
+        // Check if currentLang is a known language, otherwise keep the URL as is
+        let knownLanguages = [{% for language in languages %} "{{ language.code }}", {% endfor %}];
+
+    if (knownLanguages.includes(currentLang)) {
+        urlParts[0] = newLang; // Replace language code with new one
+    } else {
+        urlParts.unshift(newLang); // If no language in URL, add it
+    }
+
+    window.location.pathname = "/" + urlParts.join("/");
+    }
+</script>

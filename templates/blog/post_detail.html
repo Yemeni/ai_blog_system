@@ -1,22 +1,23 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
+{% load i18n %}
 
-<head>
-    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ post.title }}</title>
-</head>
+{% block title %}{{ post.title }}{% endblock %}
 
-<body>
-    <h1>{{ post.title }}</h1>
-    <p>{{ post.content }}</p>
-    <p>Author: {{ post.author.username }}</p>
-    <p>Created at: {{ post.created_at }}</p>
-    <p>Updated at: {{ post.updated_at }}</p>
-    <a href="{% url 'post_edit' post.pk %}">Edit</a>
-    <a href="{% url 'post_list' %}">Back to Posts</a>
-</body>
+{% block content %}
+<div class="post-detail">
+    <h1 class="post-title">{{ post.title }}</h1>
+    <p class="post-content">{{ post.content }}</p>
 
-</html>
+    <div class="post-meta">
+        <p><strong>{% trans "Author" %}:</strong> {{ post.author.username }}</p>
+        <p><strong>{% trans "Created at" %}:</strong> {{ post.created_at }}</p>
+        <p><strong>{% trans "Updated at" %}:</strong> {{ post.updated_at }}</p>
+    </div>
+
+    <div class="post-actions">
+        <a href="{% url 'post_edit' post.pk %}" class="btn">{% trans "Edit" %}</a>
+        <a href="{% url 'post_list' %}" class="btn btn-secondary">{% trans "Back to Posts" %}</a>
+    </div>
+</div>
+{% endblock %}
