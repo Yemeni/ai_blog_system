@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-13 23:25+0100\n"
+"POT-Creation-Date: 2025-02-14 18:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,8 +20,95 @@ msgstr ""
 
 #: .\blog\models.py:8
 msgid "title"
-msgstr "le tittle"
+msgstr "Le Titre"
 
 #: .\blog\models.py:9
 msgid "content"
+msgstr "Le Contenu"
+
+#: .\templates\blog\_post.html:7
+msgid "Delete"
+msgstr "Supprimer"
+
+#: .\templates\blog\navbar.html:5
+msgid "Home"
+msgstr "Accueil"
+
+#: .\templates\blog\navbar.html:10 .\templates\blog\post_form.html:5
+#: .\templates\blog\post_form.html:9
+msgid "New Post"
+msgstr ""
+
+#: .\templates\blog\navbar.html:17
+msgid "Change Language"
+msgstr ""
+
+#: .\templates\blog\post_detail.html:13
+msgid "Author"
+msgstr ""
+
+#: .\templates\blog\post_detail.html:14
+msgid "Created at"
+msgstr ""
+
+#: .\templates\blog\post_detail.html:15
+msgid "Updated at"
+msgstr ""
+
+#: .\templates\blog\post_detail.html:19
+msgid "Edit"
+msgstr ""
+
+#: .\templates\blog\post_detail.html:20
+msgid "Back to Posts"
+msgstr ""
+
+#: .\templates\blog\post_form.html:5 .\templates\blog\post_form.html:9
+msgid "Edit Post"
+msgstr ""
+
+#: .\templates\blog\post_form.html:16
+msgid "Prompt for AI"
+msgstr ""
+
+#: .\templates\blog\post_form.html:18
+msgid "Enter your prompt here"
+msgstr ""
+
+#: .\templates\blog\post_form.html:20
+msgid "Generate Post"
+msgstr ""
+
+#: .\templates\blog\post_form.html:24
+msgid "Select AI Provider"
+msgstr ""
+
+#: .\templates\blog\post_form.html:28
+msgid "Other AI Provider"
+msgstr ""
+
+#: .\templates\blog\post_form.html:34
+#, fuzzy
+#| msgid "title"
+msgid "Title"
+msgstr "le tittle"
+
+#: .\templates\blog\post_form.html:40
+msgid "Content"
+msgstr ""
+
+#: .\templates\blog\post_form.html:46
+msgid "Save"
+msgstr ""
+
+#: .\templates\blog\post_form.html:47
+msgid "Cancel"
+msgstr ""
+
+#: .\templates\blog\post_list.html:4 .\templates\blog\post_list.html:7
+msgid "Blog Posts"
+msgstr ""
+
+#: .\templates\blog\post_list.html:22
+msgid "Create New Post"
 msgstr ""
