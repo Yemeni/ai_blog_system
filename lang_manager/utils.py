@@ -108,26 +108,35 @@ from parler.models import TranslatableModel, TranslatedFields
 from django.utils.translation import gettext as _
 from rosetta.conf import settings as rosetta_settings
 
+import polib  # Used to read .po files
+
 def list_rosetta_translations():
-    """Lists all Rosetta translations available in the system."""
+    """Lists all translation fields from Rosetta instead of just file paths."""
     locale_paths = settings.LOCALE_PATHS
     available_languages = settings.LANGUAGES
 
     translations = []
     for lang_code, lang_name in available_languages:
-        lang_path = None
+        translation_entries = []
         for path in locale_paths:
-            lang_path = f"{path}/{lang_code}/LC_MESSAGES/django.po"
-            if os.path.exists(lang_path):
-                break  # Found a valid translation file
+            po_file_path = os.path.join(path, lang_code, "LC_MESSAGES", "django.po")
+            if os.path.exists(po_file_path):
+                po = polib.pofile(po_file_path)
+                for entry in po.translated_entries():
+                    translation_entries.append({
+                        "original": entry.msgid,
+                        "translated": entry.msgstr
+                    })
+                break  # Stop after finding the first valid file
 
         translations.append({
             "language_code": lang_code,
             "language_name": lang_name,
-            "translation_file": lang_path if lang_path and os.path.exists(lang_path) else "Not found"
+            "translations": translation_entries if translation_entries else "No translations available"
         })
 
     return translations
+
 
 def list_parler_translations():
     """Lists all translations stored by Parler."""
