@@ -95,9 +95,9 @@ def update_translation_view(request):
 
             if translation_type == "parler":
                 model_name = data.get("model_name")
-                object_id = data.get("object_id")  # ✅ Require object ID
+                object_id = data.get("object_id")  # Require object ID
                 lang_code = data.get("language_code")
-                field = data.get("field")  # Must be "title" or "content"
+                field = data.get("field")  # "title" or "content"
                 new_translation = data.get("new_translation")
 
                 if not all([model_name, object_id, lang_code, field, new_translation]):
@@ -107,7 +107,7 @@ def update_translation_view(request):
 
             elif translation_type == "rosetta":
                 lang_code = data.get("language_code")
-                key = data.get("key")  # The translation key in the .po file
+                key = data.get("key")  # Translation key in .po file
                 new_translation = data.get("new_translation")
 
                 if not all([lang_code, key, new_translation]):
@@ -135,7 +135,7 @@ def batch_update_rosetta_translations(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
-            translations_data = data.get("rosetta_translations", [])  # Default to empty list if missing
+            translations_data = data.get("rosetta_translations", [])
 
             if not isinstance(translations_data, list):
                 return JsonResponse({"error": "Invalid data format. 'rosetta_translations' must be a list."}, status=400)
@@ -156,7 +156,7 @@ def batch_update_rosetta_translations(request):
                     errors.append({"error": "Missing language_code in entry."})
                     continue
 
-                # ✅ Process existing translations
+                # Process existing translations
                 for translation in translations:
                     key = translation.get("original")
                     new_translation = translation.get("translated")
@@ -167,7 +167,7 @@ def batch_update_rosetta_translations(request):
                         else:
                             errors.append({"language": lang_code, "key": key, "error": "Translation update failed"})
 
-                # ✅ Process missing translations
+                # Process missing translations
                 for translation in missing_translations:
                     key = translation.get("original")
                     new_translation = translation.get("translated")

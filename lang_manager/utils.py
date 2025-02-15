@@ -3,7 +3,7 @@ import json
 import subprocess
 import sys
 
-# Define BASE_DIR manually
+# Define BASE_DIR
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LANGUAGE_FILE = os.path.join(BASE_DIR, "lang_manager", "languages.json")
 LOCALE_DIR = os.path.join(BASE_DIR, "AI_Blog_System", "locale") 
@@ -41,7 +41,7 @@ def add_language(code, name):
     language_data = load_languages()
 
     if any(lang[0] == code for lang in language_data["languages"]):
-        return False  # Language already exists
+        return False  # Language exists
 
     language_data["languages"].append([code, name])
     language_data["parler_languages"]["global"].append({"code": code})
@@ -57,23 +57,23 @@ def remove_language(code):
     language_data["parler_languages"]["global"] = [lang for lang in language_data["parler_languages"]["global"] if lang["code"] != code]
 
     save_languages(language_data)
-    return True  # ✅ Ensure a return value
+    return True  # Ensure return value
 
 def generate_translation_files(lang_code):
     """Generates .po and .mo files for a specific language using the correct Python interpreter."""
     locale_path = os.path.join(LOCALE_DIR, lang_code, "LC_MESSAGES")
 
-    # Ensure directory structure exists
+    # Ensure directory structure
     os.makedirs(locale_path, exist_ok=True)
 
     try:
-        # Use the same Python executable that runs Django
+        # Use Python executable running Django
         python_executable = sys.executable
 
-        # Generate .po file
+        # Generate .po
         subprocess.run([python_executable, "manage.py", "makemessages", "-l", lang_code], check=True)
 
-        # Compile .mo file
+        # Compile .mo
         subprocess.run([python_executable, "manage.py", "compilemessages"], check=True)
 
         print(f"✅ Successfully generated .po and .mo for: {lang_code}")
@@ -101,14 +101,14 @@ def generate_all_translations():
         "failed": error_list
     }
 
-# TODO: extract the following stuff to a separate file
+# TODO: extract to separate file
 
 from django.conf import settings
 from parler.models import TranslatableModel, TranslatedFields
 from django.utils.translation import gettext as _
 from rosetta.conf import settings as rosetta_settings
 
-import polib  # Used to read .po files
+import polib  # Read .po files
 
 
 def list_rosetta_translations():
@@ -129,18 +129,18 @@ def list_rosetta_translations():
                 po = polib.pofile(po_file_path)
 
                 for entry in po:
-                    if entry.msgstr.strip():  # ✅ If translated
+                    if entry.msgstr.strip():  # If translated
                         translation_entries.append({
                             "original": entry.msgid,
                             "translated": entry.msgstr
                         })
-                    else:  # ❌ If missing translation
+                    else:  # If missing translation
                         missing_entries.append({
                             "original": entry.msgid,
-                            "translated": None  # No translation available
+                            "translated": None  # No translation
                         })
 
-                break  # Stop after finding the first valid file
+                break  # Stop after first valid file
 
         translations.append({
             "language_code": lang_code,
@@ -157,10 +157,10 @@ def list_parler_translations():
     """Lists all translations stored by Parler with object IDs."""
     translations = []
     
-    for model in TranslatableModel.__subclasses__():  # Get all translatable models
-        for obj in model.objects.all():  # Iterate over all objects
-            for lang_code in obj.get_available_languages():  # Get available translations
-                obj.set_current_language(lang_code)  # ✅ Switch to correct language
+    for model in TranslatableModel.__subclasses__():  # All translatable models
+        for obj in model.objects.all():  # Iterate objects
+            for lang_code in obj.get_available_languages():  # Available translations
+                obj.set_current_language(lang_code)  # Switch to correct language
                 
                 translated_fields = {
                     field: getattr(obj, field) for field in model._parler_meta.get_translated_fields()
@@ -168,7 +168,7 @@ def list_parler_translations():
 
                 translations.append({
                     "model": model.__name__,
-                    "object_id": obj.id,  # ✅ Include object ID
+                    "object_id": obj.id,  # Include object ID
                     "language_code": lang_code,
                     "translated_fields": translated_fields if translated_fields else "No translations available"
                 })
@@ -186,19 +186,19 @@ def update_rosetta_translation(lang_code, original_text, new_translation):
         if os.path.exists(po_file_path):
             po = polib.pofile(po_file_path)
 
-            # Find and update the translation
+            # Update translation
             for entry in po:
                 if entry.msgid == original_text:
                     entry.msgstr = new_translation
-                    po.save()  # Save the changes to the file
+                    po.save()  # Save changes
 
-                    # Compile .mo file to apply changes
+                    # Compile .mo to apply changes
                     mo_file_path = po_file_path.replace(".po", ".mo")
                     subprocess.run(["msgfmt", "-o", mo_file_path, po_file_path], check=True)
 
-                    return True  # Successfully updated
+                    return True  # Updated
 
-    return False  # Translation not found
+    return False  # Not found
 
 
 
@@ -207,21 +207,20 @@ def update_parler_translation(model_name, object_id, lang_code, field, new_trans
     for model in TranslatableModel.__subclasses__():
         if model.__name__ == model_name:
             try:
-                obj = model.objects.get(id=object_id)  # ✅ Get specific object by ID
+                obj = model.objects.get(id=object_id)  # Get object by ID
                 available_languages = obj.get_available_languages()
 
-                # If translation does not exist, create it
+                # If translation missing, create
                 if lang_code not in available_languages:
-                    obj.create_translation(lang_code)  # ✅ Create a new translation entry
+                    obj.create_translation(lang_code)  # Create translation entry
 
-                obj.set_current_language(lang_code)  # ✅ Switch to the requested language
+                obj.set_current_language(lang_code)  # Switch to requested language
 
-                if hasattr(obj, field):  # ✅ Ensure field exists
-                    setattr(obj, field, new_translation)  # ✅ Update or create translation
+                if hasattr(obj, field):  # Ensure field exists
+                    setattr(obj, field, new_translation)  # Update or create translation
                     obj.save()
-                    return True  # ✅ Successfully updated or created
+                    return True  # Updated or created
 
             except model.DoesNotExist:
-                return False  # ❌ Object not found
-
-    return False  # ❌ Translation or field not found
+                return False  # Object not found
+    return False  # Translation or field not found
