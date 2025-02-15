@@ -9,7 +9,6 @@ on:
 permissions:
   contents: write  
 
-
 jobs:
   build:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -19,19 +18,19 @@ jobs:
       - name: 📥 Checkout Repository
         uses: actions/checkout@v3
 
-      - name: 🏗️ Build Docker Image
+      - name: 🏗️ Build Docker Image (AI-Blog-App-Docker)
         run: |
-          docker build -t my-django-app .
-      
+          docker build -t AI-Blog-App-Docker .
+
       - name: 🛠️ Save Docker Image as a Tar Archive
         run: |
-          docker save -o my-django-app.tar my-django-app
+          docker save -o AI-Blog-App-Docker.tar AI-Blog-App-Docker
 
       - name: 📦 Upload Docker Image as an Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: django-docker-image
-          path: my-django-app.tar
+          name: AI-Blog-Docker-Image
+          path: AI-Blog-App-Docker.tar
 
   release:
     needs: build
@@ -41,15 +40,15 @@ jobs:
       - name: 📥 Download Docker Image
         uses: actions/download-artifact@v4
         with:
-          name: django-docker-image
+          name: AI-Blog-Docker-Image
           path: .
 
       - name: 🏗️ Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v1.0.${{ github.run_number }}
-          name: "Django Docker Image Release"
+          name: "AI Blog App Docker Release"
           body: "Auto-generated release for build #${{ github.run_number }}."
-          files: my-django-app.tar
+          files: AI-Blog-App-Docker.tar
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
