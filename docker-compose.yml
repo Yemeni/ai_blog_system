@@ -7,7 +7,7 @@ services:
       - "8000:8000"
     volumes:
       - ./db.sqlite3:/app/db.sqlite3 # temporarily persistant until I set up a proper database
-      - .:/app
+      - .:/app # lataer I should just do the langauges.json and the locale folder only
     environment:
       - DJANGO_SUPERUSER_USERNAME=admin
       - DJANGO_SUPERUSER_PASSWORD=admin
