@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "blog",
     "parler",
     "lang_manager",
+    'core',
 ]
 
 MIDDLEWARE = [
