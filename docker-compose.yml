@@ -12,4 +12,7 @@ services:
       - DJANGO_SUPERUSER_USERNAME=admin
       - DJANGO_SUPERUSER_PASSWORD=admin
       - DJANGO_SUPERUSER_EMAIL=admin@example.com
+
+    env_file:
+      - .env # our openai key will be here, use AI_OPENAI_API_TOKEN="your-super-secret-token"
     restart: always
