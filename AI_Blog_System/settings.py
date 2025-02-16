@@ -14,6 +14,9 @@ import os.path
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 from .utils import get_languages, get_parler_languages
+import logging
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +30,41 @@ SECRET_KEY = "django-insecure-wuyvap(3mc(y)kyh+qhw&q*yo!(&rx-da&2hq1$yfb5zil4@kx
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "level": "DEBUG",  # Set to DEBUG to see everything
+            "class": "logging.StreamHandler",
+            "formatter": "detailed",
+        },
+    },
+    "formatters": {
+        "detailed": {
+            "format": "%(asctime)s [%(levelname)s] %(message)s",
+        }
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+}
+
+# Log when AI API keys are missing
+AI_OPENAI_API_TOKEN = os.getenv("AI_OPENAI_API_TOKEN", "")
+AI_DEEPSEEK_API_TOKEN = os.getenv("AI_DEEPSEEK_API_TOKEN", "")
+
+if not AI_OPENAI_API_TOKEN:
+    logging.error("🚨 AI_OPENAI_API_TOKEN is missing!")
+
+if not AI_DEEPSEEK_API_TOKEN:
+    logging.error("🚨 AI_DEEPSEEK_API_TOKEN is missing!")
+
+
 
 ALLOWED_HOSTS = []
 

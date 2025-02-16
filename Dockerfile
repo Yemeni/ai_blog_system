@@ -1,4 +1,4 @@
-# Use official Python base image
+# Use official Python base image # later switch to normal python for debuging
 FROM python:3.12-slim
 
 # Set work directory
