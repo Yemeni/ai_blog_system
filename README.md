@@ -95,6 +95,172 @@ docker rm -f ai-blog-app
 
 🚀 **Now your AI Blog System is fully automated on any OS!** 🎉  
 
+
+
+# 🛠 API Usage Examples
+
+The following API endpoints allow you to manage translations, languages, and system operations.
+
+## 📌 List Available Languages
+`http
+GET /lang_manager/list/
+`
+
+**Example Request (cURL):**
+`bash
+curl -X GET http://127.0.0.1:8000/lang_manager/list/
+`
+
+**Response:**
+`json
+{
+    "languages": [
+        ["en", "English"],
+        ["ar", "Arabic"],
+        ["fr", "French"]
+    ]
+}
+`
+
+## 📌 List All Translations
+`http
+GET /lang_manager/list_translations/
+`
+
+**Example Request (cURL):**
+`bash
+curl -X GET http://127.0.0.1:8000/lang_manager/list_translations/
+`
+
+## 📌 Update a Single Rosetta Translation
+`http
+POST /lang_manager/update_translation/
+`
+
+**Example Request (cURL):**
+`bash
+curl -X POST http://127.0.0.1:8000/lang_manager/update_translation/ \
+     -H "Content-Type: application/json" \
+     -d '{
+           "type": "rosetta",
+           "language_code": "fr",
+           "key": "title",
+           "new_translation": "le tittle"
+         }'
+`
+
+## 📌 Batch Update Rosetta Translations
+`http
+POST /lang_manager/batch_update_rosetta/
+`
+
+**Example Request (cURL):**
+`bash
+curl -X POST http://127.0.0.1:8000/lang_manager/batch_update_rosetta/ \
+     -H "Content-Type: application/json" \
+     -d '{
+          "rosetta_translations": [
+              {
+                "language_code": "fr",
+                "translations": [
+                  { "original": "title", "translated": "Le Titre" },
+                  { "original": "content", "translated": "Le Contenu" }
+                ]
+              },
+              {
+                "language_code": "ar",
+                "translations": [
+                  { "original": "title", "translated": "العنوان" },
+                  { "original": "content", "translated": "المحتوى" }
+                ]
+              }
+          ]
+        }'
+`
+
+## 📌 Update Parler Content Field
+`http
+POST /lang_manager/update_translation/
+`
+
+**Example Request (cURL):**
+`bash
+curl -X POST http://127.0.0.1:8000/lang_manager/update_translation/ \
+     -H "Content-Type: application/json" \
+     -d '{
+           "type": "parler",
+           "model_name": "Post",
+           "object_id": 47,
+           "language_code": "en",
+           "field": "content",
+           "new_translation": "Updated content about working from home."
+         }'
+`
+
+## 📌 Generate All Translations
+`http
+POST /lang_manager/generate/
+`
+
+**Example Request (cURL):**
+`bash
+curl -X POST http://127.0.0.1:8000/lang_manager/generate/
+`
+
+## 📌 Generate Translations for a Specific Language
+`http
+POST /lang_manager/generate/{language_code}/
+`
+
+**Example Request (cURL) for Chinese (Simplified):**
+`bash
+curl -X POST http://127.0.0.1:8000/lang_manager/generate/zh-hans/
+`
+
+## 📌 Add a New Language
+`http
+POST /lang_manager/add/
+`
+
+**Example Request (cURL) for Chinese (Simplified):**
+`bash
+curl -X POST http://127.0.0.1:8000/lang_manager/add/ \
+     -H "Content-Type: application/json" \
+     -d '{
+           "code": "zh-hans",
+           "name": "Chinese"
+         }'
+`
+
+## 📌 Remove a Language
+`http
+POST /lang_manager/remove/
+`
+
+**Example Request (cURL) for Chinese (Simplified):**
+`bash
+curl -X POST http://127.0.0.1:8000/lang_manager/remove/ \
+     -H "Content-Type: application/json" \
+     -d '{
+           "code": "zh-hans"
+         }'
+`
+
+## 📌 Restart Django Application
+`http
+POST /core/restart/
+`
+
+**Example Request (cURL):**
+`bash
+curl -X POST http://127.0.0.1:8000/core/restart/
+`
+
+
+
+
+
+
 ---
 ### 🔹 Notes
 - **Windows users:** Make sure PowerShell has execution permissions (XSet-ExecutionPolicy RemoteSigned -Scope CurrentUserX if needed).  
