@@ -32,8 +32,31 @@ jobs:
           name: ai-blog-docker-image
           path: ai-blog-app-docker.tar
 
-  release:
+  generate-api-docs:
     needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 🛠 Install Dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install drf-yasg
+
+      - name: 📄 Generate API Documentation (Swagger)
+        run: |
+          python manage.py generateschema --format openapi-json > openapi.json
+
+      - name: 📦 Upload API Documentation as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-docs
+          path: openapi.json
+
+  release:
+    needs: [build, generate-api-docs]
     runs-on: ubuntu-latest
 
     steps:
@@ -41,6 +64,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ai-blog-docker-image
+          path: .
+
+      - name: 📥 Download API Documentation
+        uses: actions/download-artifact@v4
+        with:
+          name: api-docs
           path: .
 
       - name: 📝 Generate Changelog
@@ -56,6 +85,8 @@ jobs:
           tag_name: v1.0.${{ github.run_number }}
           name: "AI Blog App Docker Release"
           body: ${{ steps.changelog.outputs.changelog }}
-          files: ai-blog-app-docker.tar
+          files: |
+            ai-blog-app-docker.tar
+            openapi.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
