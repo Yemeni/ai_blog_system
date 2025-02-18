@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "parler",
     "lang_manager",
     'core',
+    'drf_yasg', # the super cool api documentation stuff
 ]
 
 MIDDLEWARE = [
