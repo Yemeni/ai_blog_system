@@ -1,0 +1,20 @@
+name: Generate Changelog
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Generate Changelog
+        uses: mikepenz/release-changelog-builder-action@v3
+        with:
+          configuration: "changelog-config.json"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
