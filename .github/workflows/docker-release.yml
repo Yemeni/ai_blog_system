@@ -43,12 +43,19 @@ jobs:
           name: ai-blog-docker-image
           path: .
 
+      - name: 📝 Generate Changelog
+        uses: mikepenz/release-changelog-builder-action@v3
+        with:
+          configuration: "changelog-config.json"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: 🏗️ Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v1.0.${{ github.run_number }}
           name: "AI Blog App Docker Release"
-          body: "Auto-generated release for build #${{ github.run_number }}."
+          body: ${{ steps.changelog.outputs.changelog }}
           files: ai-blog-app-docker.tar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
