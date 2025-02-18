@@ -1,41 +1,42 @@
 import os
 import sys
 import subprocess
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import user_passes_test
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import api_view
 
-
-# --------------------------------------
-# 📌 Secure Django Restart API
-# --------------------------------------
 @swagger_auto_schema(
     method="post",
-    operation_description="Securely restarts the Django application. Requires admin privileges.",
-    responses={
-        200: openapi.Response("Django is restarting..."),
-        403: openapi.Response("Forbidden: Only superusers can restart Django."),
-        500: openapi.Response("Server error while restarting Django."),
-    }
+    operation_description="Securely restarts the Django application.",
+    responses={200: openapi.Response("Django is restarting...")},
 )
 @api_view(["POST"])
-@user_passes_test(lambda u: u.is_superuser)  # Only superusers can restart Django
+@csrf_exempt
+@user_passes_test(lambda u: u.is_superuser)  # Only superusers can restart
 def restart_django(request):
-    """Securely restart the Django application."""
+    """Securely restart Django & work in Swagger + Postman."""
 
     try:
         if os.environ.get("RUNNING_IN_DOCKER"):
-            os.system("touch /app/restart.txt")  # Docker restart trigger
+            os.system("touch /app/restart.txt")  # Trigger Docker restart
         else:
-            # Restart Django without breaking debugging
-            subprocess.Popen([sys.executable, "manage.py", "runserver", "0.0.0.0:8000"])
+            python_executable = sys.executable
+            manage_py = os.path.abspath("manage.py")
 
-            # Exit the old process
-            os._exit(0)
+            print("🔄 Restarting Django...")  #
 
-        return Response({"message": "Django is restarting..."})
+            # Run Django in a new background process (no immediate exit)
+            subprocess.Popen(
+                [python_executable, manage_py, "runserver", "0.0.0.0:8000"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                start_new_session=True,  # Prevents immediate exit
+            )
+
+            return JsonResponse({"message": "Django is restarting..."})  # Respond immediately
 
     except Exception as e:
-        return Response({"error": str(e)}, status=500)
+        return JsonResponse({"error": str(e)}, status=500)
