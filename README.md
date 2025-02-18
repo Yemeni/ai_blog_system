@@ -1,6 +1,10 @@
 # 📌 AI Blog System - Docker Setup (Windows & Linux)
 This guide will help you **automatically download, setup, and run** the latest **AI Blog System Docker image** on **Windows (PowerShell) and Linux (Bash)**.
 
+![Build](https://img.shields.io/github/actions/workflow/status/Yemeni/ai_blog_system/docker-release.yml)
+![License](https://img.shields.io/github/license/Yemeni/ai_blog_system)
+![Latest Release](https://img.shields.io/github/v/release/Yemeni/ai_blog_system)
+
 ---
 
 ## 📌 Step 1: Download the Latest Release
