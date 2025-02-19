@@ -103,6 +103,11 @@ docker rm -f ai-blog-app
 
 # 🛠 API Usage Examples
 
+🚀 **Live API Documentation**: [Swagger UI](https://yemeni.github.io/ai_blog_system/)
+
+Or you can view it in the classical way:
+<details>
+
 The following API endpoints allow you to manage translations, languages, and system operations.
 
 ## 📌 List Available Languages
@@ -260,6 +265,7 @@ POST /core/restart/
 curl -X POST http://127.0.0.1:8000/core/restart/
 `
 
+</details>
 
 
 
