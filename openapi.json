@@ -1,0 +1,260 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "AI Blog System API",
+        "description": "API documentation for AI Blog System",
+        "termsOfService": "https://yousefh.com/terms/",
+        "contact": {
+            "email": "support@yousefh.com"
+        },
+        "license": {
+            "name": "MIT License"
+        },
+        "version": "v1"
+    },
+    "basePath": "/",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "Basic": {
+            "type": "basic"
+        }
+    },
+    "security": [
+        {
+            "Basic": []
+        }
+    ],
+    "paths": {
+        "/core/restart/": {
+            "post": {
+                "operationId": "core_restart_create",
+                "description": "Securely restarts the Django application.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Django is restarting..."
+                    }
+                },
+                "tags": [
+                    "core"
+                ]
+            },
+            "parameters": []
+        },
+        "/lang_manager/add/": {
+            "post": {
+                "operationId": "lang_manager_add_create",
+                "description": "Adds a new language to the system.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "required": [
+                                "code",
+                                "name"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "zh-hans"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "example": "Chinese"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Language added successfully"
+                    }
+                },
+                "tags": [
+                    "lang_manager"
+                ]
+            },
+            "parameters": []
+        },
+        "/lang_manager/batch_update_rosetta/": {
+            "post": {
+                "operationId": "lang_manager_batch_update_rosetta_create",
+                "description": "Batch update multiple translations across multiple languages in Rosetta.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Batch translation update successful"
+                    }
+                },
+                "tags": [
+                    "lang_manager"
+                ]
+            },
+            "parameters": []
+        },
+        "/lang_manager/generate/": {
+            "post": {
+                "operationId": "lang_manager_generate_create",
+                "description": "Generates .po and .mo files for all languages.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Translation files generated"
+                    }
+                },
+                "tags": [
+                    "lang_manager"
+                ]
+            },
+            "parameters": []
+        },
+        "/lang_manager/generate/{lang_code}/": {
+            "post": {
+                "operationId": "lang_manager_generate_create",
+                "description": "Generates .po and .mo files for a specific language.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Translation files generated for the language"
+                    }
+                },
+                "tags": [
+                    "lang_manager"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "lang_code",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/lang_manager/list/": {
+            "get": {
+                "operationId": "lang_manager_list_list",
+                "description": "Returns the list of available languages.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "List of languages"
+                    }
+                },
+                "tags": [
+                    "lang_manager"
+                ]
+            },
+            "parameters": []
+        },
+        "/lang_manager/list_translations/": {
+            "get": {
+                "operationId": "lang_manager_list_translations_list",
+                "description": "Lists all translations from Rosetta and Parler.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Translation list"
+                    }
+                },
+                "tags": [
+                    "lang_manager"
+                ]
+            },
+            "parameters": []
+        },
+        "/lang_manager/remove/": {
+            "post": {
+                "operationId": "lang_manager_remove_create",
+                "description": "Removes a language from the system.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "required": [
+                                "code"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "zh-hans"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Language removed successfully"
+                    }
+                },
+                "tags": [
+                    "lang_manager"
+                ]
+            },
+            "parameters": []
+        },
+        "/lang_manager/update_translation/": {
+            "post": {
+                "operationId": "lang_manager_update_translation_create",
+                "description": "Updates a specific translation in Rosetta or Parler.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "required": [
+                                "type",
+                                "language_code",
+                                "key",
+                                "new_translation"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "example": "rosetta"
+                                },
+                                "language_code": {
+                                    "type": "string",
+                                    "example": "fr"
+                                },
+                                "key": {
+                                    "type": "string",
+                                    "example": "title"
+                                },
+                                "new_translation": {
+                                    "type": "string",
+                                    "example": "Le Titre"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Translation updated successfully"
+                    }
+                },
+                "tags": [
+                    "lang_manager"
+                ]
+            },
+            "parameters": []
+        }
+    },
+    "definitions": {}
+}
