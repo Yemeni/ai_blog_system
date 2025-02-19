@@ -33,7 +33,7 @@
         "/core/restart/": {
             "post": {
                 "operationId": "core_restart_create",
-                "description": "Securely restarts the Django application.",
+                "description": "Restarts Django (supports Docker & non-Docker).",
                 "parameters": [],
                 "responses": {
                     "200": {
