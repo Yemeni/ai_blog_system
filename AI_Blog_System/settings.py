@@ -14,6 +14,7 @@ import os.path
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 from .utils import get_languages, get_parler_languages
+from drf_yasg import openapi
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -171,3 +172,19 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+
+
+SWAGGER_SETTINGS = {
+    "DEFAULT_INFO": "config.api_info"
+}
+
+api_info = openapi.Info(
+    title="AI Blog System API",
+    default_version="v1",
+    description="API documentation for AI Blog System",
+    terms_of_service="https://yousefh.com/terms/",
+    contact=openapi.Contact(email="support@yousefh.com"),
+    license=openapi.License(name="MIT License"),
+)
