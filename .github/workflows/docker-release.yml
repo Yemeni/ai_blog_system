@@ -55,8 +55,54 @@ jobs:
           name: api-docs
           path: openapi.json
 
+  publish-api-docs:
+    needs: generate-api-docs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 📥 Download API Documentation
+        uses: actions/download-artifact@v4
+        with:
+          name: api-docs
+          path: .
+
+      - name: 📄 Setup Swagger UI
+        run: |
+          mkdir -p public
+          mv openapi.json public/
+          echo '<!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>API Documentation</title>
+              <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.css">
+          </head>
+          <body>
+              <div id="swagger-ui"></div>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js"></script>
+              <script>
+                  window.onload = function() {
+                      const ui = SwaggerUIBundle({
+                          url: "openapi.json",
+                          dom_id: "#swagger-ui",
+                      });
+                  }
+              </script>
+          </body>
+          </html>' > public/index.html
+
+      - name: 🚀 Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+
   release:
-    needs: [build, generate-api-docs]
+    needs: [build, generate-api-docs, publish-api-docs]
     runs-on: ubuntu-latest
 
     steps:
