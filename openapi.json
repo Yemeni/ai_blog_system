@@ -33,11 +33,17 @@
         "/core/restart/": {
             "post": {
                 "operationId": "core_restart_create",
-                "description": "Restarts Django (supports Docker & non-Docker).",
+                "description": "Securely restarts the Django application. Requires admin privileges.",
                 "parameters": [],
                 "responses": {
                     "200": {
                         "description": "Django is restarting..."
+                    },
+                    "403": {
+                        "description": "Forbidden: Only superusers can restart Django."
+                    },
+                    "500": {
+                        "description": "Server error while restarting Django."
                     }
                 },
                 "tags": [
