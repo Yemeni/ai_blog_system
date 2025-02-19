@@ -1,10 +1,10 @@
 from django.urls import path, re_path
 
 from .swagger import schema_view
-from .views import restart_django
+from .views import restart_wsgi
 
 urlpatterns = [
-    path("restart/", restart_django, name="restart_django"),
+    path("restart/", restart_wsgi, name="restart_django"),
 ]
 
 # here are the swagger stuff and the api doc stuff
