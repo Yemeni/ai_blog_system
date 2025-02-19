@@ -176,9 +176,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 
-SWAGGER_SETTINGS = {
-    "DEFAULT_INFO": "config.api_info"
-}
+
 
 api_info = openapi.Info(
     title="AI Blog System API",
@@ -188,3 +186,7 @@ api_info = openapi.Info(
     contact=openapi.Contact(email="support@yousefh.com"),
     license=openapi.License(name="MIT License"),
 )
+
+SWAGGER_SETTINGS = {
+    "DEFAULT_INFO": api_info
+}
