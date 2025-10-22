@@ -21,7 +21,7 @@ pluggy==1.5.0
 polib==1.2.0
 Pygments==2.19.1
 PySocks==1.7.1
-pytest==8.3.4
+pytest==8.3.5
 pytest-cov==6.0.0
 pytest-django==4.10.0
 python-dotenv==1.0.1
