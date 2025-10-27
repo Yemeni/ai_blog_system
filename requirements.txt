@@ -30,7 +30,7 @@ requests-toolbelt==1.0.0
 rich==13.9.4
 setuptools==75.8.0
 sqlparse==0.5.3
-tzdata==2025.1
+tzdata==2025.2
 urllib3==2.3.0
 
 drf-yasg~=1.21.10
